@@ -2,31 +2,17 @@ import React, { Component } from "react";
 
 class TodoCreator extends Component {
   constructor(props) {
-    super();
+    super(props);
+    this.state = { newItemText: "" };
   }
-  state = { newItemText: "" };
 
   updateNexTextValue = (event) => {
     this.setState({ newItemText: event.target.value });
   };
 
   createNewTodo = () => {
-    if (
-      !this.state.todoItems.find(
-        (item) => item.action === this.state.newItemText
-      )
-    ) {
-      this.setState({
-        todoItems: [
-          ...this.state.todoItems,
-          {
-            action: this.state.newItemText,
-            done: false,
-          },
-        ],
-        newItemText: "",
-      });
-    }
+    this.props.callback(this.state.newItemText);
+    this.setState({ newItemText: "" });
   };
 
   render() {
@@ -38,7 +24,7 @@ class TodoCreator extends Component {
           onChange={this.updateNexTextValue}
         />
         <button className="btn btn-primary mt-1" onClick={this.createNewTodo}>
-          Dodaj
+          Nowe zadanie
         </button>
       </div>
     );
