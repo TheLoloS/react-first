@@ -1,12 +1,17 @@
 import React, { Component } from "react";
+import TodoBanner from "./TodoBanner";
+import TodoCreator from "./TodoCreator";
+import TodoRow from "./TodoRow";
+
 // import logo from './logo.svg';
 // import './App.css';
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
     console.log(this.props);
     this.state = {
+      userName: "Piotr",
       todoItems: [
         {
           action: "zadanie 1",
@@ -25,7 +30,7 @@ class App extends Component {
           done: false,
         },
       ],
-      newItemText: "",
+      // newItemText: "",
     };
   }
 
@@ -33,12 +38,8 @@ class App extends Component {
     this.setState({ newItemText: event.target.value });
   };
 
-  createNewTodo = () => {
-    if (
-      !this.state.todoItems.find(
-        (item) => item.action === this.state.newItemText
-      )
-    ) {
+  createNewTodo = (task) => {
+    if (!this.state.todoItems.find((item) => item.action === task)) {
       this.setState({
         todoItems: [
           ...this.state.todoItems,
@@ -47,7 +48,6 @@ class App extends Component {
             done: false,
           },
         ],
-        newItemText: "",
       });
     }
   };
@@ -62,39 +62,15 @@ class App extends Component {
 
   todoTableRows = () =>
     this.state.todoItems.map((item) => (
-      <tr key={item.action}>
-        <td>{item.action}</td>
-        <td>
-          <input
-            type="checkbox"
-            checked={item.done}
-            onChange={() => this.toggleTodo(item)}
-          />
-        </td>
-      </tr>
+      <TodoRow key={item.action} item={item} callback={this.toggleTodo} />
     ));
 
   render = () => {
     return (
       <div>
-        <h4 className="bg-primary text-white text-center p-2">
-          lista zadań użytkownika {this.state.userName}
-          (Liczba zadań: {this.state.todoItems.filter((a) => !a.done).length})
-        </h4>
+        <TodoBanner name={this.state.userName} tasks={this.state.todoItems} />
         <div className="container-fluid">
-          <div className="my-1">
-            <input
-              className="form-control"
-              value={this.state.newItemText}
-              onChange={this.updateNexTextValue}
-            />
-            <button
-              className="btn btn-primary mt-1"
-              onClick={this.createNewTodo}
-            >
-              Dodaj
-            </button>
-          </div>
+          <TodoCreator callback={this.createNewTodo} />
           <table className="table table-striped table-bordered">
             <thead>
               <tr>
@@ -110,4 +86,4 @@ class App extends Component {
   };
 }
 
-export default App;
+//  App;
