@@ -12,6 +12,7 @@ class TodoRow extends Component {
             checked={this.props.item.done}
             onChange={() => this.props.callback(this.props.item)}
           />
+          <button className="btn btn-danger button-tbl">Usuń</button>
         </td>
       </tr>
     );

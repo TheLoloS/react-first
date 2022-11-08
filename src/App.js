@@ -3,6 +3,7 @@ import TodoBanner from "./TodoBanner";
 import TodoCreator from "./TodoCreator";
 import TodoRow from "./TodoRow";
 import VisibilityControl from "./VisibilityControl";
+import "./App.css";
 
 export default class App extends Component {
   constructor(props) {
@@ -38,24 +39,30 @@ export default class App extends Component {
 
   createNewTodo = (task) => {
     if (!this.state.todoItems.find((item) => item.action === task)) {
-      this.setState({
-        todoItems: [
-          ...this.state.todoItems,
-          {
-            action: task,
-            done: false,
-          },
-        ],
-      });
+      this.setState(
+        {
+          todoItems: [
+            ...this.state.todoItems,
+            {
+              action: task,
+              done: false,
+            },
+          ],
+        },
+        () => localStorage.setItem("todos", JSON.stringify(this.state))
+      );
     }
   };
 
   toggleTodo = (todo) => {
-    this.setState({
-      todoItems: this.state.todoItems.map((item) =>
-        item.action === todo.action ? { ...item, done: !item.done } : item
-      ),
-    });
+    this.setState(
+      {
+        todoItems: this.state.todoItems.map((item) =>
+          item.action === todo.action ? { ...item, done: !item.done } : item
+        ),
+      },
+      () => localStorage.setItem("todos", JSON.stringify(this.state))
+    );
   };
 
   todoTableRows = (doneValue) =>
@@ -64,6 +71,36 @@ export default class App extends Component {
       .map((item) => (
         <TodoRow key={item.action} item={item} callback={this.toggleTodo} />
       ));
+
+  componentDidMount = () => {
+    let data = localStorage.getItem("todos");
+    this.setState(
+      data != null
+        ? JSON.parse(data)
+        : {
+            userName: "Piotr",
+            todoItems: [
+              {
+                action: "zadanie 1",
+                done: false,
+              },
+              {
+                action: "zadanie 2",
+                done: true,
+              },
+              {
+                action: "zadanie 3",
+                done: true,
+              },
+              {
+                action: "zadanie 4",
+                done: false,
+              },
+            ],
+            showCompleted: true,
+          }
+    );
+  };
 
   render = () => {
     return (
